@@ -1,0 +1,77 @@
+.guest {
+  padding-top: 12px;
+  background-color: #c8c3c3;
+}
+
+.guest h1 {
+  color: #323732;
+  background-color: #8d958d;
+  padding: 16px;
+  margin: auto;
+  width: 800px;
+}
+.guest h2 {
+  color: #323732;
+  text-decoration: underline;
+}
+
+.addGuest {
+  color: #fff;
+  background-color: #8d958d;
+  padding: 16px;
+  margin: auto;
+  width: 800px;
+}
+
+.addGuest label {
+  width: 600px;
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+}
+
+.firstName {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.lastName {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.button {
+  display: flex;
+  margin: auto;
+  background-color: #323732;
+  color: white;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #494848;
+}
+
+.removeButton {
+  margin-top: 16px;
+  width: 128px;
+  background-color: #323732;
+  color: white;
+  margin-left: 32px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.removeButton:hover {
+  background-color: #494848;
+}

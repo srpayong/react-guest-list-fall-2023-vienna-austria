@@ -1,14 +1,10 @@
 import './App.css';
-import React from 'react';
-import GuestList from './guestlist.js';
+import AddGuest from './AddGuest.js';
 
-function App() {
+export default function App() {
   return (
     <div className="App">
-      {' '}
-      <GuestList />{' '}
+      <AddGuest />
     </div>
   );
 }
-
-export default App;
