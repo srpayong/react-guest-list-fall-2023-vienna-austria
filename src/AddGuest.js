@@ -24,7 +24,7 @@ export default function AddGuest() {
     fetchGuests().catch((e) => console.error(e));
   }, []);
 
-  const submitGuest = async (firstNameArg, lastNameArg) => {
+  const submitGuest = async (firstName, lastName) => {
     try {
       const response = await fetch(`${baseUrl}/guests`, {
         method: 'POST',
@@ -32,8 +32,8 @@ export default function AddGuest() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          firstName: firstNameArg,
-          lastName: lastNameArg,
+          firstName: firstName,
+          lastName: lastName,
         }),
       });
       const data = await response.json();
@@ -41,8 +41,8 @@ export default function AddGuest() {
         return [
           ...prevState,
           {
-            firstName: firstNameArg,
-            lastName: lastNameArg,
+            firstName: firstName,
+            lastName: lastName,
             id: data.id,
             attending: data.attending,
           },
@@ -89,7 +89,6 @@ export default function AddGuest() {
           <label htmlFor="firstNameInput">
             First Name:
             <input
-              id="firstNameInput"
               className={styles.firstName}
               disabled={disabledInputs}
               placeholder="First name*"
@@ -100,7 +99,6 @@ export default function AddGuest() {
           <label htmlFor="lastNameInput">
             Last Name:
             <input
-              id="lastNameInput"
               className={styles.lastName}
               placeholder="Last name*"
               disabled={disabledInputs}
