@@ -1,178 +1,157 @@
-import './index.css';
-import { useEffect, useState } from 'react';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import React, { useEffect, useState } from 'react';
 import styles from './App.module.scss';
+import Guest from './Guest';
 
-export default function App() {
-  const [guestList, setGuestList] = useState([]);
+const baseUrl =
+  'https://express-guest-list-api-memory-data-store--srpf15.repl.co';
+
+export default function AddGuest() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [guests, setGuests] = useState([]);
+  const [disabledInputs, setDisabledInputs] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  const baseUrl =
-    'http://express-guest-list-api-memory-data-store--srpf15.repl.co';
-
   useEffect(() => {
-    setIsLoading(false);
-  }, [guestList]);
+    const fetchGuests = async () => {
+      const response = await fetch(`${baseUrl}/guests`);
+      const guestsData = await response.json();
+      setGuests(guestsData);
+      setIsLoading(false);
+      setDisabledInputs(false);
+    };
 
-  // Get all guests
-  async function getGuestList() {
-    setIsLoading(true);
-    const response = await fetch(`${baseUrl}/guests`);
-    const allGuestsData = await response.json();
-    setGuestList([...allGuestsData]);
-  }
-  useEffect(() => {
-    getGuestList().catch((error) => console.log(error));
+    fetchGuests().catch((e) => console.error(e));
   }, []);
 
-  // Create new guest -- POST method
-  async function newGuest() {
-    const response = await fetch(`${baseUrl}/guests`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
-        attending: false,
-      }),
-    });
-    const createdGuest = await response.json();
-    const newGuestList = [...guestList, createdGuest];
-    setGuestList(newGuestList);
-    setFirstName('');
-    setLastName('');
-  }
+  // Function accepts two arguments required for creating a guest. We call setGuests with an update function that accepts prevState (previous guests), and add new guest to the guests state array.
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    await newGuest();
-  }
-
-  // Change focus to the next input field when you hit return
-  const handleEnter = (event) => {
-    if (event.key === 'enter') {
-      const form = event.target.form;
-      const index = [...form].indexOf(event.target);
-      form.elements[index + 1].focus();
-      event.preventDefault();
+  const submitGuest = async (firstNameArg, lastNameArg) => {
+    try {
+      const response = await fetch(`${baseUrl}/guests`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: firstNameArg,
+          lastName: lastNameArg,
+        }),
+      });
+      const data = await response.json();
+      setGuests((prevState) => {
+        return [
+          ...prevState,
+          {
+            firstName: firstNameArg,
+            lastName: lastNameArg,
+            id: data.id,
+            attending: data.attending,
+          },
+        ];
+      });
+      setFirstName('');
+      setLastName('');
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  // Update a guest attendance-- PUT method
-  async function updateGuest(id, status) {
-    const response = await fetch(`${baseUrl}/guests/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ attending: !status }),
-    });
-    const updatedGuest = await response.json();
-    const updatedGuestList = guestList.filter((index) => {
-      return index.id !== updatedGuest.id;
-    });
-    setGuestList([...guestList], updatedGuestList);
-    getGuestList().catch(() => console.log('Error'));
-  }
-
-  // Delete a guest -- DELETE method
-  function handleDeleteGuest(id) {
-    const deleteGuest = async () => {
-      const response = await fetch(`${baseUrl}/guests/${id}`, {
+  // Delete guests and update guest state
+  const deleteGuest = async (guest) => {
+    try {
+      await fetch(`${baseUrl}/guests/${guest.id}`, {
         method: 'DELETE',
       });
-      const deletedGuest = await response.json();
-      const currentGuestlist = [...guestList];
-      const newGuestlist = currentGuestlist.filter(
-        (guest) => guest.id !== deletedGuest.id,
-      );
-      setGuestList(newGuestlist);
-    };
-    deleteGuest().catch((error) => {
+
+      setGuests((prevState) => {
+        const shallowCopy = [...prevState];
+        const filteredGuests = shallowCopy.filter((element) => {
+          return element.id !== guest.id;
+        });
+        return filteredGuests;
+      });
+    } catch (error) {
       console.error(error);
-    });
-  }
+    }
+  };
 
   return (
-    <div className={styles.pageContainer}>
-      <div className={styles.formContainer}>
+    <div
+      className={styles.container}
+      style={{
+        background: 'linear-gradient(to left bottom, #8ECDDD, #FFCC70)',
+      }}
+    >
+      <header>
         <h1>Guest List</h1>
-
-        <form onSubmit={handleSubmit}>
+      </header>
+      <div className={styles.addGuest}>
+        <form>
           <label>
-            First name
+            First Name:
             <input
+              className={styles.firstName}
+              disabled={disabledInputs}
+              placeholder="First name*"
               value={firstName}
-              placeholder="First name"
-              disabled={isLoading}
-              onKeyDown={handleEnter}
-              onChange={(event) => {
-                setFirstName(event.currentTarget.value);
-              }}
+              onChange={(e) => setFirstName(e.currentTarget.value)}
             />
           </label>
           <label>
-            Last name
+            Last Name:
             <input
+              className={styles.lastName}
+              placeholder="Last name*"
+              disabled={disabledInputs}
               value={lastName}
-              placeholder="Last name"
-              disabled={isLoading}
-              onChange={(event) => {
-                setLastName(event.currentTarget.value);
+              onChange={(e) => setLastName(e.currentTarget.value)}
+              onKeyDown={async (e) => {
+                if (e.key === 'Enter' && firstName !== '' && lastName !== '') {
+                  await submitGuest(firstName, lastName);
+                }
               }}
             />
           </label>
-          <button disabled={isLoading}>Add Guest</button>
         </form>
-
-        {isLoading ? (
-          <div>Loading...</div>
+        <br />
+        <br />
+        <div>
+          <button
+            className={styles.button}
+            onClick={async () => {
+              if (firstName !== '' && lastName !== '') {
+                await submitGuest(firstName, lastName);
+              }
+            }}
+          >
+            Add Guest
+          </button>
+        </div>
+      </div>
+      <div>
+        <h2>Guest Info:</h2>
+        {!isLoading ? (
+          guests.map((guest) => (
+            <div
+              key={`guest_${guest.id}`}
+              data-test-id="guest"
+              style={{ display: 'flex', justifyContent: 'center' }}
+            >
+              <Guest guest={guest} />
+              <button
+                className={styles.removeButton}
+                aria-label={`Remove ${guest.firstName} ${guest.lastName}`}
+                onClick={async () => {
+                  await deleteGuest(guest);
+                }}
+              >
+                🗑
+              </button>
+            </div>
+          ))
         ) : (
-          <div className={styles.outputContainer}>
-            {guestList.length === 0 ? (
-              <p>✏️ Guest list: </p>
-            ) : (
-              guestList.map((guest) => (
-                <div
-                  className={styles.guestContainer}
-                  key={`guest-${guest.id}`}
-                  data-test-id="guest"
-                >
-                  <div>
-                    <input
-                      aria-label={`${guest.firstName} ${guest.lastName} attending status`}
-                      type="checkbox"
-                      checked={guest.attending}
-                      onChange={() => {
-                        updateGuest(guest.id, guest.attending).catch((error) =>
-                          console.log(error),
-                        );
-                      }}
-                    />
-                    <span>
-                      {guest.attending === true ? 'attending' : 'not attending'}
-                    </span>
-                  </div>
-                  <p>
-                    {guest.firstName} {guest.lastName}
-                  </p>
-
-                  <button
-                    aria-label={`Remove ${guest.firstName}${guest.lastName}`}
-                    onClick={() => {
-                      handleDeleteGuest(guest.id);
-                    }}
-                  >
-                    <AiOutlineCloseCircle className={styles.closeButtonIcon} />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
+          <p>Loading...</p>
         )}
       </div>
     </div>
