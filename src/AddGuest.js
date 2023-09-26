@@ -86,9 +86,10 @@ export default function AddGuest() {
       </header>
       <div className={styles.addGuest}>
         <form>
-          <label>
+          <label htmlFor="firstNameInput">
             First Name:
             <input
+              id="firstNameInput"
               className={styles.firstName}
               disabled={disabledInputs}
               placeholder="First name*"
@@ -96,9 +97,10 @@ export default function AddGuest() {
               onChange={(e) => setFirstName(e.currentTarget.value)}
             />
           </label>
-          <label>
+          <label htmlFor="lastNameInput">
             Last Name:
             <input
+              id="lastNameInput"
               className={styles.lastName}
               placeholder="Last name*"
               disabled={disabledInputs}
