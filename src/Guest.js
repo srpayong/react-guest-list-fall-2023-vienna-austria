@@ -28,11 +28,7 @@ export default function Guest(props) {
         <span>Guest:</span>
         {props.guest.firstName} {props.guest.lastName}
       </div>
-      <button
-        className={styles.attendingButton}
-        onClick={() => toggleLight()}
-        // style={{ fontSize: '18px' }}
-      >
+      <button className={styles.attendingButton} onClick={() => toggleLight()}>
         Guest {isAttending ? 'is attending ✅' : 'is not attending ❌'}
         <input
           aria-label={`${props.guest.firstName} ${props.guest.lastName} attending status`}

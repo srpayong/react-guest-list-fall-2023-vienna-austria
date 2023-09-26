@@ -24,8 +24,6 @@ export default function AddGuest() {
     fetchGuests().catch((e) => console.error(e));
   }, []);
 
-  // Function accepts two arguments required for creating a guest. We call setGuests with an update function that accepts prevState (previous guests), and add new guest to the guests state array.
-
   const submitGuest = async (firstNameArg, lastNameArg) => {
     try {
       const response = await fetch(`${baseUrl}/guests`, {
@@ -84,7 +82,7 @@ export default function AddGuest() {
       }}
     >
       <header>
-        <h1>Guest List</h1>
+        <h1 className={styles.h1}>Guest List</h1>
       </header>
       <div className={styles.addGuest}>
         <form>
@@ -130,7 +128,7 @@ export default function AddGuest() {
         </div>
       </div>
       <div>
-        <h2>Guest Info:</h2>
+        <h2 className={styles.h2}>Guest Info:</h2>
         {!isLoading ? (
           guests.map((guest) => (
             <div

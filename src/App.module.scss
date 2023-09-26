@@ -3,25 +3,28 @@
     'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.guest h1 {
+.h1 {
   color: #323732;
-  background-color: #8d958d;
+  font-size: 30px;
   padding: 16px;
   margin: auto;
   width: 800px;
 }
-.guest h2 {
+.h2 {
   padding-top: 10px;
   color: #323732;
   text-decoration: underline;
+  font-size: 24px;
 }
 
 .addGuest {
   color: #fff;
   background-color: #fffadd;
-  // padding: 16px;
+  padding: 16px;
   margin: auto;
-  width: 800px;
+  width: 700px;
+  height: auto;
+  border-radius: 8px;
 }
 
 .addGuest label {
@@ -52,9 +55,9 @@
 .button {
   display: flex;
   margin: auto;
-  background-color: #323732;
+  background-color: #662549;
   color: white;
-  padding: 14px 20px;
+  padding: 16px 18px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -66,8 +69,9 @@
 
 .removeButton {
   margin-top: 16px;
+  margin-bottom: 10px;
   width: 128px;
-  background-color: #323732;
+  background-color: #662549;
   color: white;
   margin-left: 32px;
   border: none;
@@ -91,22 +95,24 @@
 }
 .guestFullName {
   margin: auto;
+  margin-bottom: 10px;
   padding: 16px;
-  width: 512px;
+  width: 532px;
+  height: auto;
   font-size: 20px;
   font-weight: bold;
-  background-color: #323732;
+  background-color: #662549;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
 }
 .attendingButton {
   width: 400px;
-  background-color: #213555;
+  background-color: #662549;
   color: white;
-  padding: 18px 30px;
-  margin: auto;
+  padding: 16px 10px;
+  margin-bottom: 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
